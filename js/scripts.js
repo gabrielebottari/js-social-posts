@@ -21,8 +21,6 @@ Milestone 3 - Se clicchiamo sul tasto "Mi Piace" cambiamo il colore al testo del
 Salviamo in un secondo array gli id dei post ai quali abbiamo messo il like.
 */
 
-
-
 const posts = [
     {
         "id": 1,
@@ -81,16 +79,20 @@ const posts = [
     }
 ];
 
-// Ottenere il riferimento all'elemento del DOM in cui verranno visualizzati i post
+//creo un array per salvare gli ID dei post ai quali hai messo like
+const likedPosts = [];
+
+//creo una costante e la collego all'html
 const feedContainer = document.getElementById('feed-container');
 
-// Iterare attraverso l'array di post e generare il markup HTML per ciascun post
+//per ogni oggetto dell'array
 posts.forEach(post => {
-  // Creare un elemento di tipo post
+    
+  //creo un elemento e le do una classe
   const postElement = document.createElement('div');
   postElement.classList.add('post');
 
-  // Generare il markup HTML utilizzando i dati del post
+  //stampo nell'html
   postElement.innerHTML = `
     <div class="post__header">
         <div class="post-meta">                    
@@ -122,6 +124,67 @@ posts.forEach(post => {
     </div>            
   `;
 
-  // Aggiungere il post al contenitore del feed
+  //appendo il post al contenitore del feed
   feedContainer.appendChild(postElement);
+
+  //creo una costante e la unisco al bottone nell'html
+  const likeButton = postElement.querySelector('.js-like-button');
+
+  //aggiungo un gestore di eventi al pulsante like
+  likeButton.addEventListener('click', () => handleLikeButtonClick(post.id));
 });
+
+//creo una funzione per gestire il like e il suo counter
+function handleLikeButtonClick(postId) {
+
+    //creo una costante e la unisco al counter dei like
+    const likeCounter = document.getElementById(`like-counter-${postId}`);
+
+    //creo una costante e la unisco al bottone dei like
+    const likeButton = document.querySelector(`[data-postid="${postId}"]`);
+
+    //per evitare al like di riportare la pagina in alto
+    event.preventDefault();
+
+    //se c'è il like lo tolgo
+    if (likedPosts.includes(postId)) {
+        unlikePost(postId, likeButton, likeCounter)
+    
+    //se non c'è lo metto
+    } else {
+        likePost(postId, likeButton, likeCounter)
+
+    }
+
+}
+
+//funzione per gestire il like
+function likePost(postId, likeButton, likeCounter) {
+
+    //aggiungo l'ID del post all'array likedPosts
+    likedPosts.push(postId);
+
+    //aggiungo la classe al pulsante like
+    likeButton.classList.add('like-button--liked');
+
+    //aumento il numero dei like
+    likeCounter.textContent = parseInt(likeCounter.textContent) + 1;
+}
+
+//funzione per togliere il like se c'è già
+function unlikePost(postId, likeButton, likeCounter) {
+
+    //trovo l'indice dell'elemento con postId nell'array likedPosts
+    const indexToRemove = likedPosts.indexOf(postId);
+
+    //se l'elemento è presente, lo rimuovo dall'array
+    if (indexToRemove !== -1) {
+        likedPosts.splice(indexToRemove, 1);
+    }
+
+    //rimuovo la classe dal pulsante like
+    likeButton.classList.remove('like-button--liked');
+
+    //rimuovo il numero aumentato del like
+    likeCounter.textContent = parseInt(likeCounter.textContent) - 1;
+}
