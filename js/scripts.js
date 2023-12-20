@@ -63,7 +63,7 @@ const posts = [
         "media": "https://unsplash.it/600/400?image=24",
         "author": {
             "name": "Luca Formicola",
-            "image": null
+            "image": "https://unsplash.it/300/300?image=21"
         },
         "likes": 56,
         "created": "2021-04-03"
@@ -80,3 +80,4 @@ const posts = [
         "created": "2021-03-05"
     }
 ];
+
